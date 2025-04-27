@@ -42,18 +42,12 @@ created_at TIMESTAMP DEFAULT now(),
 updated_at TIMESTAMP DEFAULT now()
 );
 
-CREATE TABLE variant(
-id BIGSERIAL PRIMARY KEY,
-name VARCHAR(200) UNIQUE NOT NULL,
-image_url TEXT,
-variant_value TEXT,
-created_at TIMESTAMP DEFAULT now(),
-updated_at TIMESTAMP DEFAULT now()
-);
+
+
+
 CREATE TABLE file(
 id BIGSERIAL PRIMARY KEY,
 image_url TEXT,
-type VARCHAR(50) CHECK (type IN ('CATEGORY','PRODUCT','PROFILE'))  DEFAULT '',
 created_at TIMESTAMP DEFAULT now(),
 updated_at TIMESTAMP DEFAULT now()
 );
@@ -70,11 +64,26 @@ added_by BIGINT REFERENCES "user"(id),
 base_price  DECIMAL(10,2) NOT NULL,
 discount DECIMAL(10,2) NOT NULL,
 final_price DECIMAL(10,2) NOT NULL,
-variant_id BIGINT REFERENCES variant(id),
 created_at TIMESTAMP DEFAULT now(),
 updated_at TIMESTAMP DEFAULT now()
 );
 
+CREATE TABLE "size"(
+id BIGSERIAL PRIMARY KEY,
+"size" VARCHAR(200) UNIQUE NOT NULL,
+product_id BIGINT REFERENCES product(id),
+created_at TIMESTAMP DEFAULT now(),
+updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE color(
+id BIGSERIAL PRIMARY KEY,
+"value" VARCHAR(200) UNIQUE NOT NULL,
+image_url TEXT,
+product_id BIGINT REFERENCES product(id),
+created_at TIMESTAMP DEFAULT now(),
+updated_at TIMESTAMP DEFAULT now()
+);
 
 CREATE TABLE customer(
 id BIGSERIAL PRIMARY KEY,
@@ -123,8 +132,8 @@ product_id BIGINT REFERENCES product(id),
 quantity INT ,
 customer_id BIGINT REFERENCES customer(id),
 created_at TIMESTAMP DEFAULT now(),
-updated_at TIMESTAMP DEFAULT now()
-
+updated_at TIMESTAMP DEFAULT now(),
+UNIQUE (customer_id, product_id)
 );
 
 
@@ -133,7 +142,8 @@ id BIGSERIAL PRIMARY KEY,
 product_id BIGINT REFERENCES product(id),
 customer_id BIGINT REFERENCES customer(id),
 created_at TIMESTAMP DEFAULT now(),
-updated_at TIMESTAMP DEFAULT now()
+updated_at TIMESTAMP DEFAULT now(),
+UNIQUE (customer_id, product_id)
 );
 
 CREATE TABLE feedback(
