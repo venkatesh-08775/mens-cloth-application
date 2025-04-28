@@ -25,11 +25,11 @@ export function AppSideBar() {
     const path = usePathname();
     const router = useRouter();
   return (
-    <Sidebar collapsible="icon" className={` border-none gap-4  bg-primary`}>
+    <Sidebar collapsible="icon" className={`w-[200px] border-none gap-4  bg-primary`}>
             
     <SidebarHeader className='flex justify-center items-center font-semibold'>
       <SidebarMenuButton onClick={()=>router.push('/')} >
-         <span  className='text-[#16151C] text-[22px]'>Men's Wear</span> 
+         <span  className='text-white font-bold'>Men's Wear</span> 
       </SidebarMenuButton>
     </SidebarHeader>
     <SidebarContent >
@@ -38,7 +38,7 @@ export function AppSideBar() {
                 <SidebarMenu className='gap-5'>
                     {menuList?.map((item, index) => (
                         <SidebarMenuItem key={index}>
-                            <SidebarMenuButton onClick={() => router.push(item?.to)} className={`${path === item.isActive ? ' text-[#006EC4] bg-[#9ad2fd] border-l-[2px]  border-[#1e86d6]':'font-normal'} w-full flex justify-start items-center text-[16px] cursor-pointer px-4 py-4`}>
+                            <SidebarMenuButton onClick={() => router.push(item?.to)} className={`w-full flex justify-start items-center text-[16px] cursor-pointer px-4 py-4 text-white font-semibold`}>
                                 {item?.icon &&  <item.icon/>}
                                 {item?.to && <span >{item.name}</span>}
                             </SidebarMenuButton>
