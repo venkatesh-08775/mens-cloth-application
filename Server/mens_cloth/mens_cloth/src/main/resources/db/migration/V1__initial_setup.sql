@@ -157,3 +157,33 @@ customer_id BIGINT REFERENCES customer(id),
 created_at TIMESTAMP DEFAULT now(),
 updated_at TIMESTAMP DEFAULT now()
 );
+
+CREATE TABLE token(
+id BIGSERIAL PRIMARY KEY,
+token TEXT NOT NULL,
+user_id BIGINT REFERENCES "user"(id) ON DELETE CASCADE,
+token_type VARCHAR(50) CHECK (token_type IN('ACCESS','REFRESH')),
+is_revoked BOOLEAN DEFAULT FALSE,
+created_at TIMESTAMP DEFAULT now(),
+expired_at TIMESTAMP DEFAULT now()
+);
+
+
+CREATE TABLE verification_code(
+id BIGSERIAL PRIMARY KEY,
+code TEXT  UNIQUE NOT NULL,
+user_id BIGINT REFERENCES "user"(id) ON DELETE CASCADE,
+is_revoked BOOLEAN DEFAULT FALSE,
+created_at TIMESTAMP DEFAULT now(),
+expired_at TIMESTAMP DEFAULT now()
+);
+
+
+CREATE TABLE invite_token(
+id BIGSERIAL PRIMARY KEY,
+token TEXT NOT NULL,
+user_id BIGINT REFERENCES "user"(id) ON DELETE CASCADE,
+is_revoked BOOLEAN DEFAULT FALSE,
+created_at TIMESTAMP DEFAULT now(),
+expired_at TIMESTAMP DEFAULT now()
+);
