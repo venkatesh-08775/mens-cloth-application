@@ -25,3 +25,19 @@ spring:
   jackson:
     property-naming-strategy: SNAKE_CASE
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: venkatesh082001@gmail.com
+    password: zbxhzpayyraimcda
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+
+
+#  zbxh zpay yrai mcda

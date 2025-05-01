@@ -60,30 +60,7 @@ public class User extends AuditableEntity implements UserDetails {
     @Override
     @JsonIgnore
     public String getUsername() {
-        return this.email;
+        return getEmail();
     }
 
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
-    }
 }
