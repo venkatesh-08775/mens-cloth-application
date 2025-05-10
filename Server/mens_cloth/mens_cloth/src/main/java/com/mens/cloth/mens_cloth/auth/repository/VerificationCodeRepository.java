@@ -16,4 +16,6 @@ public interface VerificationCodeRepository extends JpaRepository<VerificationCo
 
 
     void deleteByExpiredAtLessThan(LocalDateTime now);
+
+    Optional<VerificationCode> findByCode(String verificationCode);
 }

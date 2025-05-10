@@ -1,0 +1,13 @@
+package com.mens.cloth.mens_cloth.auth.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ForgotPasswordDto {
+    private String verificationCode;
+    private String password;
+}

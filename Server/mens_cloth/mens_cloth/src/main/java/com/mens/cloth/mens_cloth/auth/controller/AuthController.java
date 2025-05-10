@@ -1,5 +1,6 @@
 package com.mens.cloth.mens_cloth.auth.controller;
 
+import com.mens.cloth.mens_cloth.auth.dto.ForgotPasswordDto;
 import com.mens.cloth.mens_cloth.auth.dto.LoginDto;
 import com.mens.cloth.mens_cloth.auth.dto.OtpDto;
 import com.mens.cloth.mens_cloth.auth.dto.SignupDto;
@@ -8,10 +9,7 @@ import com.mens.cloth.mens_cloth.auth.response.AuthResponse;
 import com.mens.cloth.mens_cloth.common.ApiResponse.APIResponse;
 import com.mens.cloth.mens_cloth.user.userService.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/auth")
@@ -38,4 +36,17 @@ public class AuthController {
         AuthResponse authResponse = userService.login(payload);
         return APIResponse.success(authResponse);
     }
+
+    @PostMapping("/forgot-password/email")
+    public APIResponse<?> forgotPassword(@RequestParam(name = "email" ) String email){
+        VerificationCode verificationCode = userService.forgotPassword(email);
+        return APIResponse.success(verificationCode);
+    }
+
+    @PostMapping("/forgot-password/email/verify")
+    public APIResponse<?> verifyAndUpdatePassword(@RequestBody ForgotPasswordDto payload){
+        userService.updatePassword(payload);
+        return APIResponse.success();
+    }
+
 }
