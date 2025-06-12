@@ -1,5 +1,6 @@
 package com.mens.cloth.mens_cloth.auth.dto;
 
+import com.mens.cloth.mens_cloth.auth.enums.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,4 +16,5 @@ public class SignupDto {
     private String email;
     private String password;
     private String mobile;
+    private UserType role;
 }

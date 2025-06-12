@@ -6,6 +6,7 @@ import com.mens.cloth.mens_cloth.auth.dto.OtpDto;
 import com.mens.cloth.mens_cloth.auth.dto.SignupDto;
 import com.mens.cloth.mens_cloth.auth.entity.Token;
 import com.mens.cloth.mens_cloth.auth.entity.VerificationCode;
+import com.mens.cloth.mens_cloth.auth.enums.UserType;
 import com.mens.cloth.mens_cloth.auth.repository.VerificationCodeRepository;
 import com.mens.cloth.mens_cloth.auth.response.AuthResponse;
 import com.mens.cloth.mens_cloth.auth.service.TokenService;
@@ -32,6 +33,12 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CustomerService customerService;
+
+    @Autowired
+    private DashboardUserService dashboardUserService;
 
     @Autowired
     private MailService mailService;
@@ -62,9 +69,15 @@ public class UserService {
                     .password(passwordEncoder.encode(payload.getPassword()))
                     .status(UserStatus.ACTIVE)
                     .isVerified(false)
+                    .role(payload.getRole())
                     .signInType(SignInType.EMAIL_PASSWORD)
                     .build();
             user = userRepository.save(user);
+            if(payload.getRole() == UserType.CUSTOMER){
+                customerService.createCustomer(user);
+            }else {
+                dashboardUserService.createDashboardUser(user);
+            }
             VerificationCode verificationCode = verificationCodeService.createOtp(user.getId());
             mailService.sendEmail(payload.getEmail(), "Signup Verification From E-Cloth", verificationCode.getCode());
 
@@ -135,7 +148,6 @@ public class UserService {
     }
 
     public List<User> fetchAllUser() {
-
         return  userRepository.findAll();
     }
 

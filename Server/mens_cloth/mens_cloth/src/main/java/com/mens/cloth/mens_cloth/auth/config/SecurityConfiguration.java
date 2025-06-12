@@ -32,7 +32,9 @@ public class SecurityConfiguration {
             cors.configurationSource(corsConfigurationSource());
         });
         httpSecurity.authorizeHttpRequests((auth)->{
-            auth.requestMatchers("/v1/auth/**").permitAll().anyRequest().authenticated();
+            auth.requestMatchers("/v1/auth/**").permitAll();
+//            auth.requestMatchers("/v1/user/**").hasRole("OWNER");
+            auth.anyRequest().authenticated();
         });
         httpSecurity.authenticationProvider(authenticationProvider);
         httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

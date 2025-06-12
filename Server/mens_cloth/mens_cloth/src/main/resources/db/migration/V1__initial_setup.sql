@@ -9,6 +9,7 @@ sign_in_type VARCHAR(50) CHECK(sign_in_type IN(
 'GOOGLE'
 )),
 is_verified BOOLEAN DEFAULT false,
+role VARCHAR(50) CHECK(role IN ('OWNER','MANAGER' ,'STAFF','CUSTOMER')) NOT NULL,
 status VARCHAR(50) CHECK(status IN(
 'ACTIVE',
 'INACTIVE'
@@ -21,7 +22,6 @@ CREATE TABLE dashboard_user(
 id BIGSERIAL PRIMARY KEY,
 user_id BIGINT REFERENCES "user"(id) ON DELETE CASCADE,
 email VARCHAR(200) NOT NULL,
-role VARCHAR(50) CHECK(role IN ('OWNER','MANAGER' ,'STAFF')) NOT NULL,
 invitation_by BIGINT REFERENCES "user"(id),
 invitation_status VARCHAR(50) CHECK (invitation_status IN('PENDING','ACCEPT','DECLINED')) DEFAULT 'PENDING',
 invitation_token TEXT UNIQUE,
@@ -87,19 +87,12 @@ updated_at TIMESTAMP DEFAULT now()
 
 CREATE TABLE customer(
 id BIGSERIAL PRIMARY KEY,
-name VARCHAR(200),
-email VARCHAR(300) UNIQUE,
-mobile TEXT,
+user_id BIGINT REFERENCES "user"(id) ON DELETE CASCADE,
 address TEXT ,
 country TEXT,
 city TEXT,
 state TEXT,
 pin_code VARCHAR(50),
-is_verified BOOLEAN DEFAULT false,
-status VARCHAR(50) CHECK(status IN(
-'ACTIVE',
-'INACTIVE'
-)) DEFAULT 'ACTIVE',
 created_at TIMESTAMP DEFAULT now(),
 updated_at TIMESTAMP DEFAULT now()
 );

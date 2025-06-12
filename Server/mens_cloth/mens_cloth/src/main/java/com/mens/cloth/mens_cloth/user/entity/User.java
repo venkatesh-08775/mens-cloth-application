@@ -1,6 +1,7 @@
 package com.mens.cloth.mens_cloth.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mens.cloth.mens_cloth.auth.enums.UserType;
 import com.mens.cloth.mens_cloth.common.abstractClasses.AuditableEntity;
 import com.mens.cloth.mens_cloth.user.enums.SignInType;
 import com.mens.cloth.mens_cloth.user.enums.UserStatus;
@@ -45,6 +46,10 @@ public class User extends AuditableEntity implements UserDetails {
     @Column(name = "is_verified")
     @JsonIgnore
     private Boolean isVerified;
+
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private UserType role;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

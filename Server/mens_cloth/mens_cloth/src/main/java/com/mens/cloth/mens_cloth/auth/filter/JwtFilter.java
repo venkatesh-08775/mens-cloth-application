@@ -27,37 +27,47 @@ public class JwtFilter extends OncePerRequestFilter {
     private UserDetailsService userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull  FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
+            throws ServletException, IOException {
 
+        final String reqHeader = request.getHeader("Authorization");
 
-       final String reqHeader = request.getHeader("Authorization");
+        if (reqHeader == null || !reqHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
+        String token = reqHeader.substring(7);
 
+        String email;
+        try {
+            email = jwtService.extractUserName(token);
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token expired. Please refresh your token or login again.");
+            return;
+        } catch (io.jsonwebtoken.JwtException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("Invalid JWT token.");
+            return;
+        }
 
-       if( reqHeader == null || !reqHeader.startsWith("Bearer ")){
-           filterChain.doFilter(request,response);
-           return;
-       }
+        if (email == null || SecurityContextHolder.getContext().getAuthentication() != null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-       String token = reqHeader.substring(7);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        if (!jwtService.validateToken(token, userDetails)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-       String email = jwtService.extractUserName(token);
-
-       if(email == null){
-           filterChain.doFilter(request,response);
-           return;
-       }
-
-       final UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-       if(!jwtService.validateToken(token,userDetails)){
-           filterChain.doFilter(request,response);
-           return;
-       }
-
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         filterChain.doFilter(request, response);
-
     }
+
 }
